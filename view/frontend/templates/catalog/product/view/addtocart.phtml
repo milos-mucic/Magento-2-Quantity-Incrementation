@@ -1,0 +1,116 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Shop now'); ?>
+<?php if ($_product->isSaleable()) : ?>
+<!--    echo $this->getLayout()->createBlock(
+//    'Magento\Catalog\Pricing\Render',
+//    "product.price.final",
+//    [
+//            'data' => [
+//                'price_render' => 'product.price.render.default',
+//                'price_type_code' => 'final_price',
+//                'zone' => 'item_view'
+//            ]
+//        ]
+//)->toHtml(); -->
+    <?php if (null !== $_product->getData('delivery_time')) : ?>
+        <div class="delivery-time">
+            <label class="delivery-time-title">
+                <?php echo __('Delivery time') ?>
+            </label>
+            <span class="delivery-time-content"><?php echo $_product->getData('delivery_time'); ?></span>
+        </div>
+    <?php endif; ?>
+    <div class="box-tocart">
+        <div class="fieldset">
+            <?php if ($block->shouldRenderQuantity()) : ?>
+                <div class="field qty">
+                    <label class="label" for="qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></label>
+                    <div class="control" data-bind="scope: 'qty_change'">
+
+                        <button class="qty-increment decreaseQty-btn" data-bind="click: decreaseQty">-</button>
+
+                        <input data-bind="value: qty()"
+                               type="number"
+                               value="1"
+                               name="qty"
+                               id="qty-input"
+                               maxlength="12"
+                               title="<?php /* @escapeNotVerified */
+                               echo __('Qty') ?>" class="input-text qty-field"
+                               data-validate="<?php echo $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                        />
+                        <script type="text/x-magento-init">
+    {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "qty_change": {
+                            "component": "Younify_QtyIncrementors/js/view/product/view/qty_change",
+                            "defaultQty": <?php echo $block->getProductDefaultQty() * 1 ?>
+                        }
+                     }
+                }
+            }
+        }
+
+
+
+
+
+
+                        </script>
+
+                        <button class="qty-increment increaseQty-btn" data-bind="click: increaseQty">+</button>
+                    </div>
+                </div>
+
+            <?php endif; ?>
+            <div class="actions">
+                <button type="submit"
+                        title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+                        class="action primary tocart"
+                        id="product-addtocart-button" disabled>
+                    <span><?= $block->escapeHtml($buttonTitle) ?></span>
+                </button>
+                <?= $block->getChildHtml('', true) ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+
+
+
+
+
+</script>
+
+<script>
+    var el_up = document.getElementById("qty");
+    var el_down = document.getElementById("GFG_DOWN");
+
+    el_up.innerHTML = "Click on the button to disable"
+        + " scrolling on input element.";
+
+    function GFG_FUN() {
+        $('#qty-input').on("wheel", function (e) {
+            $(this).blur();
+        });
+
+        el_down.innerHTML = "Mouse wheel disabled!";
+    }
+</script>
